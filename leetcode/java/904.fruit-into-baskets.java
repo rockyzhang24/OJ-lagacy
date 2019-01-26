@@ -69,20 +69,66 @@
  * 
  * 
  * 
- * 
- * 
- * 
- * 
- * Note:
- * 
- * 
- * 1 <= tree.length <= 40000
- * 0 <= tree[i] < tree.length
- * 
- * 
- */
-class Solution {
-    public int totalFruit(int[] tree) {
-        
+* 
+* 
+* 
+* 
+* Note:
+* 
+* 
+* 1 <= tree.length <= 40000
+* 0 <= tree[i] < tree.length
+* 
+* 
+*/
+
+// This question is equivelent to find the longest subarray containing at most
+// two types of elements.
+
+// Method1: using sliding window and a HashMap
+class Solution1 {
+  public int totalFruit(int[] tree) {
+    int len = tree.length;
+    // hashmap <key = fruit type, value = the amount of fruit with this type>
+    HashMap<Integer, Integer> map = new HashMap<>();
+    int totalAmount = 0;
+    // sliding window [l, r]
+    for (int l = 0, r = 0; r < len; ++r) {
+      map.put(tree[r], map.getOrDefault(tree[r], 0) + 1);
+      while (map.size() > 2) {
+        map.put(tree[l], map.get(tree[l]) - 1);
+        if (map.get(tree[l]) == 0) {
+          map.remove(tree[l]);
+        }
+        l++;
+      }
+      totalAmount = Math.max(totalAmount, r - l + 1);
     }
+    return totalAmount;
+  }
+}
+
+// Method2: without using a HashMap
+class Solution {
+  public int totalFruit(int[] tree) { 
+    int len = tree.length;
+    int last = -1;  // last fruit type
+    int secondLast = -1;  // second last fruit type
+    int maxAmount = 0;
+    int nextL = 0;  // index for the next left-boundary of the sliding window
+    // sliding window [l, r]
+    for (int l = 0, r = 0; r < len; ++r) {
+      int t = tree[r];
+      if (t != last && t != secondLast) {
+        l = nextL;
+      }
+      if (t != last) {
+        nextL = r;
+        secondLast = last;
+        last = t;
+      }
+      maxAmount = Math.max(maxAmount, r - l + 1);
+    }
+    return maxAmount;
+  }
 }
