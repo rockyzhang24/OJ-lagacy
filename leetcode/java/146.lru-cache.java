@@ -54,6 +54,8 @@ class LRUCache {
   private ListNode tail;
 
   // doubly linked list
+  // NOTE: here this nested class can also be static because this nested class
+  // won't use any members of its enclosing class
   private class ListNode {
     int key;
     int val;
